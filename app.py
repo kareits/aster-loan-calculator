@@ -9,7 +9,7 @@ import streamlit.components.v1 as components
 
 
 # Словари ставок, тарифов страхования и первоначального взноса
-car_rate_dict = {"used_car": 0.33, "new_car": 0.28}
+car_rate_dict = {"used_car": 0.33, "new_car": 0.25}
 insurance_rates = {"new_car": 0.045, "used_car": 0.025}
 default_down_payment = {"new_car": 20, "used_car": 30}
 
