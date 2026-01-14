@@ -1,0 +1,31 @@
+# Виртуальное окружение
+venv/
+.env/
+.env.bak/
+.venv/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Кэш Streamlit
+.streamlit/
+
+# Настройки и временные файлы VS Code
+.vscode/
+*.code-workspace
+
+# Файлы macOS и системные
+.DS_Store
+Thumbs.db
+
+# Файлы Jupyter (если вдруг используешь)
+.ipynb_checkpoints/
+
+# Архивы, временные и логи
+*.zip
+*.tar
+*.log
+*.tmp
