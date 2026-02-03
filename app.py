@@ -9,8 +9,9 @@ import streamlit.components.v1 as components
 
 
 # Словари ставок, тарифов страхования и первоначального взноса
-car_rate_dict = {"used_car": 0.33, "new_car": 0.25}
-insurance_rates = {"new_car": 0.045, "used_car": 0.025}
+VAT_RATE = 0.16
+car_rate_dict = {"new_car": 0.235, "used_car": 0.33}
+insurance_rates = {"new_car": 0.035, "used_car": 0.025}
 default_down_payment = {"new_car": 20, "used_car": 30}
 
 # # Путь к PNG-логотипу
@@ -40,7 +41,7 @@ car_price = st.number_input(
     "Стоимость автомобиля (в тенге)",
     min_value=0,
     max_value=200_000_000,
-    value=10_000_000,
+    value=12_000_000,
     step=100_000
 )
 
@@ -56,12 +57,13 @@ down_payment_percent = st.slider(
     step=5
 )
 
-# Расчет страховой премии
+# Расчет страховой премииt
+insurance_term = 2
 st.subheader("Страхование КАСКО")
-insurance_switch = st.toggle("Страхование Каско на 1 год", value=False)
+insurance_switch = st.toggle(f"Страхование Каско на {insurance_term} года", value=True)
 insurance_premium = 0
 if insurance_switch:
-    insurance_premium = car_price * insurance_rates[car_key]
+    insurance_premium = car_price * insurance_rates[car_key] * insurance_term
     st.write(
         f"💰 Стоимость страховой премии: **{insurance_premium:,.0f} тенге**"
     )
@@ -76,11 +78,11 @@ loan_amount = principal_net + insurance_premium
 has_subsidy = False
 if car_key == "new_car":
     st.subheader("Субсидия от дистрибьютера")
-    has_subsidy = st.toggle("Наличие субсидии от дистрибьютера", value=False)
+    has_subsidy = st.toggle("Наличие субсидии от дистрибьютера", value=True)
 subsidy_percent = 0
 subsidy_amount = 0
 if has_subsidy:
-    subsidy_percent = st.slider("Размер субсидии (%)", 0, 20, 5, step=1)
+    subsidy_percent = st.slider("Размер субсидии (%)", 0, 20, 10, step=1)
     subsidy_amount = car_price * subsidy_percent / 100
     st.write(f"💸 Сумма субсидии: **{subsidy_amount:,.0f} тенге**")
 else:
@@ -97,7 +99,7 @@ monthly_payment = -npf.pmt(monthly_rate, loan_term, loan_amount)
 total_payment = monthly_payment * loan_term
 total_interest = total_payment - loan_amount
 if has_subsidy:
-    total_interest -= subsidy_amount
+    total_interest -= subsidy_amount/(1 + VAT_RATE)
     monthly_payment = (loan_amount + total_interest) / loan_term
     monthly_rate = npf.rate(loan_term, -monthly_payment, loan_amount, 0, when=0)
     rate = monthly_rate * 12
